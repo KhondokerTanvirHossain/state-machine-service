@@ -16,7 +16,7 @@ public class Router {
     private final Handler handler;
 
     @Bean
-    public RouterFunction<ServerResponse> calendarRouterConfig() {
+    public RouterFunction<ServerResponse> memberRouterConfig() {
         return RouterFunctions.route()
             .nest(RequestPredicates.accept(MediaType.APPLICATION_JSON), builder -> builder
                 .POST(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.CREATE), handler::create)

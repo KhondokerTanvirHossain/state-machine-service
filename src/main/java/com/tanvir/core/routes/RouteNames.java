@@ -15,5 +15,9 @@ public class RouteNames {
 	public final static String GET_ALL_AUTHORIZED = "/getListOfAuthorizedMembers";
 	public final static String GET_ALL_UNAUTHORIZED = "/getListOfUnAuthorizedMembers";
 
+    public final static String TURNSTILE = "/turnstile";
+    public final static String STATE = "/state";
+    public final static String EVENTS = "/events";
+
 
 }

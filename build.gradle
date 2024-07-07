@@ -41,6 +41,7 @@ tasks.register('integrationTest', Test) {
 ext {
 	set('sentryVersion', "6.28.0")
 	set('springCloudVersion', "2023.0.0-RC1")
+    set('springStatemachineVersion', '4.0.0')
 }
 
 dependencies {
@@ -83,7 +84,7 @@ dependencies {
 //	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-    implementation 'org.springframework.statemachine:spring-statemachine-core:4.0.0'
+    implementation 'org.springframework.statemachine:spring-statemachine-starter'
 
 }
 
@@ -91,6 +92,7 @@ dependencyManagement {
 	imports {
 		mavenBom "io.sentry:sentry-bom:${sentryVersion}"
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom "org.springframework.statemachine:spring-statemachine-bom:${springStatemachineVersion}"
 	}
 }
 

@@ -16,10 +16,11 @@ import reactor.core.publisher.Mono;
 public class Handler {
 
     private final SimpleMemberService service;
+    private final StateMachineMemberService stateMachineMemberService;
 
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(UnauthorizedMember.class)
-            .flatMap(service::createMember)
+            .flatMap(stateMachineMemberService::createMember)
             .flatMap(member -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(member))
@@ -79,7 +80,7 @@ public class Handler {
     public Mono<ServerResponse> getListOfUnAuthorizedMembers(ServerRequest serverRequest) {
         return ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(service.getListOfAuthorizedMembers(), UnauthorizedMember.class)
+            .body(service.getListOfUnAuthorizedMembers(), UnauthorizedMember.class)
             .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
             ;
     }
