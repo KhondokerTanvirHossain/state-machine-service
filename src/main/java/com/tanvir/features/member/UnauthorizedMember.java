@@ -12,8 +12,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Data
-@Document(collection = "members")
-public class Member {
+@Document(collection = "unauthorized_members")
+public class UnauthorizedMember {
     @Id
     private String id;
     private String otherAttribute;

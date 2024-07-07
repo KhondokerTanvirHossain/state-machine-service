@@ -15,10 +15,10 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Member
     @Override
     public void configure(StateMachineStateConfigurer<MemberStates, MemberEvents> states) throws Exception {
         states.withStates()
-            .initial(MemberStates.UNAUTHORIZED)
-            .state(MemberStates.PENDING_APPROVAL)
-            .state(MemberStates.APPROVED)
-            .end(MemberStates.DELETED)
+//            .initial(MemberStates.UNAUTHORIZED)
+//            .state(MemberStates.PENDING_APPROVAL)
+//            .state(MemberStates.APPROVED)
+//            .end(MemberStates.DELETED)
             .states(EnumSet.allOf(MemberStates.class));
     }
 

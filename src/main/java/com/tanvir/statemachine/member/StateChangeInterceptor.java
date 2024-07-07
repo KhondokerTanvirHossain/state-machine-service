@@ -5,7 +5,9 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StateChangeInterceptor extends StateMachineInterceptorAdapter<MemberStates, MemberEvents> {
 
     @Override
