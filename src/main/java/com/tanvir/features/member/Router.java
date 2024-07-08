@@ -25,9 +25,7 @@ public class Router {
                 .POST(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.REJECT), handler::reject)
                 .GET(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.GET_BY_ID), handler::getById)
                 .GET(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.GET_ALL_AUTHORIZED), handler::getListOfAuthorizedMembers)
-                .GET(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.GET_ALL_UNAUTHORIZED), handler::getListOfUnAuthorizedMembers)
-                .GET(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.STATE), handler::state)
-                .POST(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.EVENTS), handler::events))
+                .GET(RouteNames.BASE_URL.concat(RouteNames.MEMBER).concat(RouteNames.GET_ALL_UNAUTHORIZED), handler::getListOfUnAuthorizedMembers))
             .build();
     }
 }

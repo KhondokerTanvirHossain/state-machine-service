@@ -23,7 +23,7 @@ public class SimpleMemberService {
 
     public Mono<UnauthorizedMember> createMember(UnauthorizedMember member) {
         member.setWorkflowStatus(MemberStates.PENDING_APPROVAL);
-        member.setStatus(MemberStates.INACTIVE);
+        member.setStatus(MemberStates.PENDING_APPROVAL);
         return unauthorizedMemberRepository.save(member);
 
     }

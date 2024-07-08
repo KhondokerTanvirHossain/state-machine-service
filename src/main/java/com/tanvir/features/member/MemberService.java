@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final StateMachine<MemberStates, MemberEvents> stateMachine;
+    private final StateMachineFactory<MemberStates, MemberEvents> stateMachine;
     private final MemberRepository memberRepository;
     private final StateChangeInterceptor stateChangeInterceptor;
 
@@ -39,7 +39,7 @@ public class MemberService {
             .subscribe();
     }
 
-    private Mono<String> stateChange(String id, MemberEvents event) {
+    /*private Mono<String> stateChange(String id, MemberEvents event) {
         return memberRepository.findById(id)
             .switchIfEmpty(Mono.error(new RuntimeException("Member not found")))
             .flatMap(member -> {
@@ -50,9 +50,9 @@ public class MemberService {
                             .then(Mono.just(stateMachine.getState().getId().toString()));
                     });
             });
-    }
+    }*/
 
-    private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String appId, MemberStates state) {
+   /* private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String appId, MemberStates state) {
         StateMachine<MemberStates, MemberEvents> memberStateMachine = stateMachine;
         return memberStateMachine.stopReactively() // Stop the state machine reactively
             .then(Mono.defer(() -> Mono.fromRunnable(() -> // Use Mono.fromRunnable to ensure reactive execution
@@ -63,7 +63,7 @@ public class MemberService {
             )))
             .then(memberStateMachine.startReactively()) // Start the state machine reactively
             .thenReturn(memberStateMachine); // Return the state machine wrapped in a Mono
-    }
+    }*/
 
 
 }

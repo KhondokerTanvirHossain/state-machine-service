@@ -7,44 +7,40 @@ import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+import java.util.EnumSet;
+
 @Configuration
-@EnableStateMachine(name = "memberStateMachine")
+@EnableStateMachineFactory(name = "memberStateMachine")
 public class MemberStateMachineConfig extends EnumStateMachineConfigurerAdapter<MemberStates, MemberEvents> {
 
     @Override
     public void configure(StateMachineStateConfigurer<MemberStates, MemberEvents> states) throws Exception {
         states
             .withStates()
-            .initial(MemberStates.INACTIVE)
-            .state(MemberStates.PENDING_APPROVAL)
-            .state(MemberStates.REVIEWED)
-            .state(MemberStates.APPROVED)
-            .state(MemberStates.REJECTED)
-            .end(MemberStates.ACTIVE);
+            .initial(MemberStates.NEW)
+            .states(EnumSet.allOf(MemberStates.class));
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<MemberStates, MemberEvents> transitions) throws Exception {
         transitions
             .withExternal()
-            .source(MemberStates.INACTIVE).target(MemberStates.PENDING_APPROVAL).event(MemberEvents.CREATE)
+            .source(MemberStates.NEW).target(MemberStates.PENDING_APPROVAL).event(MemberEvents.SUBMIT)
             .and().withExternal()
             .source(MemberStates.PENDING_APPROVAL).target(MemberStates.REVIEWED).event(MemberEvents.REVIEW)
             .and().withExternal()
+            .source(MemberStates.PENDING_APPROVAL).target(MemberStates.REVIEWED).event(MemberEvents.REJECT)
+            .and().withExternal()
             .source(MemberStates.REVIEWED).target(MemberStates.APPROVED).event(MemberEvents.APPROVE)
             .and().withExternal()
-//            .source(MemberStates.REVIEWED).target(MemberStates.REJECTED).event(MemberEvents.REJECT)
-//            .and().withExternal()
-            .source(MemberStates.APPROVED).target(MemberStates.ACTIVE).event(MemberEvents.ACTIVATE);
+            .source(MemberStates.REVIEWED).target(MemberStates.REJECTED).event(MemberEvents.REJECT)
+            .and().withExternal()
+            .source(MemberStates.INACTIVE).target(MemberStates.ACTIVE).event(MemberEvents.ACTIVATE)
+            .and().withExternal()
+            .source(MemberStates.ACTIVE).target(MemberStates.INACTIVE).event(MemberEvents.DEACTIVATE)
+            .and().withExternal()
+            .source(MemberStates.INACTIVE).target(MemberStates.CLOSED).event(MemberEvents.CLOSE)
+        ;
     }
 
-    /*@Bean
-    public StateMachineListener<MemberStates, MemberEvents> listener() {
-        return new StateMachineListenerAdapter<MemberStates, MemberEvents>() {
-            @Override
-            public void stateChanged(State<MemberStates, MemberEvents> from, State<MemberStates, MemberEvents> to) {
-                System.out.println("State change to " + to.getId());
-            }
-        };
-    }*/
 }

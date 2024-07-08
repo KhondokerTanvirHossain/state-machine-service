@@ -16,12 +16,12 @@ import reactor.core.publisher.Mono;
 @Service
 public class StateMachineMemberService {
 
-    private final StateMachine<MemberStates, MemberEvents> stateMachine;
+    private final StateMachineFactory<MemberStates, MemberEvents> stateMachine;
     private final MemberRepository memberRepository;
     private final UnauthorizedMemberRepository unauthorizedMemberRepository;
     private final ModelMapper modelMapper;
 
-    public StateMachineMemberService(@Qualifier("memberStateMachine") StateMachine<MemberStates, MemberEvents> stateMachine,
+    public StateMachineMemberService(StateMachineFactory<MemberStates, MemberEvents> stateMachine,
                                      MemberRepository memberRepository,
                                      UnauthorizedMemberRepository unauthorizedMemberRepository,
                                      ModelMapper modelMapper) {
@@ -31,7 +31,7 @@ public class StateMachineMemberService {
         this.modelMapper = modelMapper;
     }
 
-    private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String memberId) {
+   /* private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String memberId) {
         StateMachine<MemberStates, MemberEvents> memberStateMachine = stateMachine;
         return Mono.fromRunnable(memberStateMachine::stopReactively)
             .then(Mono.fromRunnable(() ->
@@ -55,7 +55,7 @@ public class StateMachineMemberService {
                     }));
             })
             .flatMap(unauthorizedMemberRepository::save);
-    }
+    }*/
 
     // Similar modifications for reviewMember, rejectMember, and approveMember methods
     // Use stateMachine.sendEvent(...) and update member states based on the state machine's state

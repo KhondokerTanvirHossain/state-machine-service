@@ -23,12 +23,10 @@ import reactor.core.publisher.Mono;
 public class Handler {
 
     private final SimpleMemberService service;
-    private final StateMachineMemberService stateMachineMemberService;
-    private final StateMachine<MemberStates, MemberEvents> stateMachine;
 
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(UnauthorizedMember.class)
-            .flatMap(stateMachineMemberService::createMember)
+            .flatMap(service::createMember)
             .flatMap(member -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(member))
@@ -91,29 +89,6 @@ public class Handler {
             .body(service.getListOfUnAuthorizedMembers(), UnauthorizedMember.class)
             .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
             ;
-    }
-
-    public Mono<ServerResponse> state(ServerRequest serverRequest) {
-        return Mono.defer(() -> Mono.justOrEmpty(stateMachine.getState().getId()))
-            .flatMap(state -> ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(state))
-            .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
-            ;
-    }
-
-    public Mono<ServerResponse> events(ServerRequest serverRequest) {
-        Flux<EventResultResponseDto> responseFlux = serverRequest.bodyToFlux(EventData.class)
-            .filter(ed -> ed.getEvent() != null)
-            .map(ed -> MessageBuilder.withPayload(MemberEvents.valueOf(ed.getEvent())).build())
-            .flatMap(memberEventsMessage -> stateMachine.sendEvent(Mono.just(memberEventsMessage)))
-            .map(EventResultResponseDto::new)
-            .doOnNext(eventResultResponseDto -> log.info("State machine event result: {}", eventResultResponseDto))
-            .doOnError(e -> log.error("Error while processing event", e));
-
-        return ServerResponse.ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(responseFlux, EventResultResponseDto.class);
     }
 
 }
