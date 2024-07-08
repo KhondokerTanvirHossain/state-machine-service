@@ -1,6 +1,5 @@
 package com.tanvir.features.member;
 
-import com.tanvir.statemachine.member.MemberStates;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

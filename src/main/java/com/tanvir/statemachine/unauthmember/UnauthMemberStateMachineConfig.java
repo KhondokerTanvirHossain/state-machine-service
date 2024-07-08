@@ -1,7 +1,5 @@
 package com.tanvir.statemachine.unauthmember;
 
-import com.tanvir.statemachine.member.MemberEvents;
-import com.tanvir.statemachine.member.MemberStates;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;

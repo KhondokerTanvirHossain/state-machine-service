@@ -1,10 +1,6 @@
 package com.tanvir.features.member;
 
 import com.tanvir.core.util.CommonFunctions;
-import com.tanvir.statemachine.member.MemberEvents;
-import com.tanvir.statemachine.member.MemberStates;
-import com.tanvir.statemachine.turnstile.TurnstileEvents;
-import com.tanvir.statemachine.turnstile.TurnstileStates;
 import org.springframework.statemachine.StateMachineEventResult;
 
 import java.util.Map;

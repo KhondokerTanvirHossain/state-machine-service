@@ -1,4 +1,3 @@
-/*
 package com.tanvir.features.memberv2.member;
 
 import com.tanvir.statemachine.member.MemberStates;
@@ -23,4 +22,3 @@ public class Member {
 
     // Getters and Setters
 }
-*/

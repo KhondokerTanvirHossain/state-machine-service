@@ -2,19 +2,12 @@ package com.tanvir.features.member;
 
 import com.tanvir.core.util.exception.ErrorHandler;
 import com.tanvir.core.util.exception.ExceptionHandlerUtil;
-import com.tanvir.features.turnstile.EventData;
-import com.tanvir.statemachine.member.MemberEvents;
-import com.tanvir.statemachine.member.MemberStates;
-import com.tanvir.statemachine.turnstile.TurnstileEvents;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component

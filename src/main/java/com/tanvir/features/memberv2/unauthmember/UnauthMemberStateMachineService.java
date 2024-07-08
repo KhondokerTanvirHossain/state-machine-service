@@ -1,8 +1,5 @@
 package com.tanvir.features.memberv2.unauthmember;
 
-import com.tanvir.features.member.UnauthorizedMemberRepository;
-import com.tanvir.statemachine.member.MemberEvents;
-import com.tanvir.statemachine.member.MemberStates;
 import com.tanvir.statemachine.unauthmember.UnauthMemberEvents;
 import com.tanvir.statemachine.unauthmember.UnauthMemberStates;
 import lombok.RequiredArgsConstructor;
