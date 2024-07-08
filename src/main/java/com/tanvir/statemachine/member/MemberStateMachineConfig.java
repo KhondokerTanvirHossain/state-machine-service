@@ -8,7 +8,7 @@ import org.springframework.statemachine.config.builders.StateMachineStateConfigu
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
 @Configuration
-@EnableStateMachineFactory(name = "memberStateMachine")
+@EnableStateMachine(name = "memberStateMachine")
 public class MemberStateMachineConfig extends EnumStateMachineConfigurerAdapter<MemberStates, MemberEvents> {
 
     @Override
@@ -33,9 +33,9 @@ public class MemberStateMachineConfig extends EnumStateMachineConfigurerAdapter<
             .and().withExternal()
             .source(MemberStates.REVIEWED).target(MemberStates.APPROVED).event(MemberEvents.APPROVE)
             .and().withExternal()
-            .source(MemberStates.REVIEWED).target(MemberStates.REJECTED).event(MemberEvents.REJECT)
-            .and().withExternal()
-            .source(MemberStates.APPROVED).target(MemberStates.ACTIVE).event(MemberEvents.APPROVE);
+//            .source(MemberStates.REVIEWED).target(MemberStates.REJECTED).event(MemberEvents.REJECT)
+//            .and().withExternal()
+            .source(MemberStates.APPROVED).target(MemberStates.ACTIVE).event(MemberEvents.ACTIVATE);
     }
 
     /*@Bean

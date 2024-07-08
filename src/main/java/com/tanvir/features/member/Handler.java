@@ -2,12 +2,19 @@ package com.tanvir.features.member;
 
 import com.tanvir.core.util.exception.ErrorHandler;
 import com.tanvir.core.util.exception.ExceptionHandlerUtil;
+import com.tanvir.features.turnstile.EventData;
+import com.tanvir.statemachine.member.MemberEvents;
+import com.tanvir.statemachine.member.MemberStates;
+import com.tanvir.statemachine.turnstile.TurnstileEvents;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -17,6 +24,7 @@ public class Handler {
 
     private final SimpleMemberService service;
     private final StateMachineMemberService stateMachineMemberService;
+    private final StateMachine<MemberStates, MemberEvents> stateMachine;
 
     public Mono<ServerResponse> create(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(UnauthorizedMember.class)
@@ -84,4 +92,28 @@ public class Handler {
             .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
             ;
     }
+
+    public Mono<ServerResponse> state(ServerRequest serverRequest) {
+        return Mono.defer(() -> Mono.justOrEmpty(stateMachine.getState().getId()))
+            .flatMap(state -> ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(state))
+            .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
+            ;
+    }
+
+    public Mono<ServerResponse> events(ServerRequest serverRequest) {
+        Flux<EventResultResponseDto> responseFlux = serverRequest.bodyToFlux(EventData.class)
+            .filter(ed -> ed.getEvent() != null)
+            .map(ed -> MessageBuilder.withPayload(MemberEvents.valueOf(ed.getEvent())).build())
+            .flatMap(memberEventsMessage -> stateMachine.sendEvent(Mono.just(memberEventsMessage)))
+            .map(EventResultResponseDto::new)
+            .doOnNext(eventResultResponseDto -> log.info("State machine event result: {}", eventResultResponseDto))
+            .doOnError(e -> log.error("Error while processing event", e));
+
+        return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(responseFlux, EventResultResponseDto.class);
+    }
+
 }

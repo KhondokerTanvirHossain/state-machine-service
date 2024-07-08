@@ -16,31 +16,31 @@ import reactor.core.publisher.Mono;
 @Service
 public class StateMachineMemberService {
 
-    private final StateMachineFactory<MemberStates, MemberEvents> stateMachineFactory;
+    private final StateMachine<MemberStates, MemberEvents> stateMachine;
     private final MemberRepository memberRepository;
     private final UnauthorizedMemberRepository unauthorizedMemberRepository;
     private final ModelMapper modelMapper;
 
-    public StateMachineMemberService(@Qualifier("memberStateMachine") StateMachineFactory<MemberStates, MemberEvents> stateMachineFactory,
+    public StateMachineMemberService(@Qualifier("memberStateMachine") StateMachine<MemberStates, MemberEvents> stateMachine,
                                      MemberRepository memberRepository,
                                      UnauthorizedMemberRepository unauthorizedMemberRepository,
                                      ModelMapper modelMapper) {
-        this.stateMachineFactory = stateMachineFactory;
+        this.stateMachine = stateMachine;
         this.memberRepository = memberRepository;
         this.unauthorizedMemberRepository = unauthorizedMemberRepository;
         this.modelMapper = modelMapper;
     }
 
     private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String memberId) {
-        StateMachine<MemberStates, MemberEvents> stateMachine = stateMachineFactory.getStateMachine();
-        return Mono.fromRunnable(stateMachine::stopReactively)
+        StateMachine<MemberStates, MemberEvents> memberStateMachine = stateMachine;
+        return Mono.fromRunnable(memberStateMachine::stopReactively)
             .then(Mono.fromRunnable(() ->
-                stateMachine.getStateMachineAccessor()
+                memberStateMachine.getStateMachineAccessor()
                     .doWithAllRegions(access ->
                         access.resetStateMachineReactively(new DefaultStateMachineContext<>(MemberStates.INACTIVE, null, null, null)))
             ))
-            .then(Mono.fromRunnable(stateMachine::startReactively))
-            .thenReturn(stateMachine);
+            .then(Mono.fromRunnable(memberStateMachine::startReactively))
+            .thenReturn(memberStateMachine);
     }
 
     public Mono<UnauthorizedMember> createMember(UnauthorizedMember member) {

@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final StateMachineFactory<MemberStates, MemberEvents> stateMachineFactory;
+    private final StateMachine<MemberStates, MemberEvents> stateMachine;
     private final MemberRepository memberRepository;
     private final StateChangeInterceptor stateChangeInterceptor;
 
@@ -53,17 +53,16 @@ public class MemberService {
     }
 
     private Mono<StateMachine<MemberStates, MemberEvents>> buildStateMachine(String appId, MemberStates state) {
-        StateMachine<MemberStates, MemberEvents> stateMachine = stateMachineFactory.getStateMachine(String.valueOf(appId));
-
-        return stateMachine.stopReactively() // Stop the state machine reactively
+        StateMachine<MemberStates, MemberEvents> memberStateMachine = stateMachine;
+        return memberStateMachine.stopReactively() // Stop the state machine reactively
             .then(Mono.defer(() -> Mono.fromRunnable(() -> // Use Mono.fromRunnable to ensure reactive execution
-                stateMachine.getStateMachineAccessor().doWithAllRegions(sma -> {
+                memberStateMachine.getStateMachineAccessor().doWithAllRegions(sma -> {
                     sma.addStateMachineInterceptor(stateChangeInterceptor);
                     sma.resetStateMachineReactively(new DefaultStateMachineContext<>(state, null, null, null)).subscribe();
                 })
             )))
-            .then(stateMachine.startReactively()) // Start the state machine reactively
-            .thenReturn(stateMachine); // Return the state machine wrapped in a Mono
+            .then(memberStateMachine.startReactively()) // Start the state machine reactively
+            .thenReturn(memberStateMachine); // Return the state machine wrapped in a Mono
     }
 
 

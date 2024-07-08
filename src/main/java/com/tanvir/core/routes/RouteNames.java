@@ -19,5 +19,4 @@ public class RouteNames {
     public final static String STATE = "/state";
     public final static String EVENTS = "/events";
 
-
 }
