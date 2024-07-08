@@ -41,22 +41,33 @@ public class TurnstileHandler {
             ;
     }
 
-    public Mono<ServerResponse> events(ServerRequest serverRequest) {
+    /*public Mono<ServerResponse> events(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(EventData.class)
             .filter(ed -> ed.getEvent() != null)
             .map(ed -> MessageBuilder.withPayload(TurnstileEvents.valueOf(ed.getEvent())).build())
             .flatMapMany(turnstileEventsMessage -> stateMachine.sendEvent(Mono.just(turnstileEventsMessage)))
+            .map(EventResultResponseDto::new)
             .collectList()
+            .doOnNext(stateMachineEventResults -> log.info("State machine event results: {}", stateMachineEventResults))
             .flatMap(stateMachineEventResults -> ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(stateMachineEventResults), List.class))
             .doOnError(e -> log.error("Error while processing event", e))
             ;
-           /* return ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(stateMachineEventResultFlux.collectList(), List.class)
-                .onErrorResume(ExceptionHandlerUtil.class, e -> ErrorHandler.buildErrorResponseForBusiness(e, serverRequest))
-                ;*/
+    }*/
+
+    public Mono<ServerResponse> events(ServerRequest serverRequest) {
+        Flux<EventResultResponseDto> responseFlux = serverRequest.bodyToFlux(EventData.class)
+            .filter(ed -> ed.getEvent() != null)
+            .map(ed -> MessageBuilder.withPayload(TurnstileEvents.valueOf(ed.getEvent())).build())
+            .flatMap(turnstileEventsMessage -> stateMachine.sendEvent(Mono.just(turnstileEventsMessage)))
+            .map(EventResultResponseDto::new)
+            .doOnNext(eventResultResponseDto -> log.info("State machine event result: {}", eventResultResponseDto))
+            .doOnError(e -> log.error("Error while processing event", e));
+
+        return ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(responseFlux, EventResultResponseDto.class);
     }
 
     @PostConstruct
