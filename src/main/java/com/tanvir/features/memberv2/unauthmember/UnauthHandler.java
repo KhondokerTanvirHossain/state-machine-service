@@ -2,6 +2,7 @@ package com.tanvir.features.memberv2.unauthmember;
 
 import com.tanvir.core.util.exception.ErrorHandler;
 import com.tanvir.core.util.exception.ExceptionHandlerUtil;
+import com.tanvir.features.memberv2.EventResult;
 import com.tanvir.features.memberv2.RequestDto;
 import com.tanvir.statemachine.unauthmember.UnauthMemberEvents;
 import com.tanvir.statemachine.unauthmember.UnauthMemberStates;

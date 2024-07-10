@@ -18,7 +18,6 @@ public class Member {
     private String id;
     private String otherAttribute;
     private MemberStates workflowStatus;
-    private MemberStates status; // Active, Inactive, Closed, Deleted
+    private MemberStates status;
 
-    // Getters and Setters
 }

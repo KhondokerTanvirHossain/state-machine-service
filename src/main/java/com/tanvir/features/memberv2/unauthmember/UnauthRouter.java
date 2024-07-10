@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 @Configuration
 @RequiredArgsConstructor
 public class UnauthRouter {
+
     private final UnauthHandler handler;
 
     @Bean

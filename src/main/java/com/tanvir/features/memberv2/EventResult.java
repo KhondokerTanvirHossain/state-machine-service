@@ -1,4 +1,4 @@
-package com.tanvir.features.memberv2.unauthmember;
+package com.tanvir.features.memberv2;
 
 import com.tanvir.core.util.CommonFunctions;
 import com.tanvir.statemachine.unauthmember.UnauthMemberEvents;

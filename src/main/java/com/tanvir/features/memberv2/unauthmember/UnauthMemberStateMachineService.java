@@ -1,5 +1,6 @@
 package com.tanvir.features.memberv2.unauthmember;
 
+import com.tanvir.features.memberv2.EventResult;
 import com.tanvir.statemachine.unauthmember.UnauthMemberEvents;
 import com.tanvir.statemachine.unauthmember.UnauthMemberStates;
 import lombok.RequiredArgsConstructor;

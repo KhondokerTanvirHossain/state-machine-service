@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SimpleMemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberRepositoryV1 memberRepository;
     private final UnauthorizedMemberRepository unauthorizedMemberRepository;
     private final ModelMapper modelMapper;
 
